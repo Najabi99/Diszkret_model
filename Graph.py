@@ -66,7 +66,7 @@ class Graph:
         return len(self._nbrs)
 
 stations = {
-    "BUD": ["KOM","SZEK","PECS","KECS","MIS",],
+    "BUD": ["KOM","SZEK","PECS","KECS","MIS"],
     "GYOR": ["KOM","SZEK"],
     "KOM":["BUD","GYOR"],
     "SZEK":["SIO","BUD","GYOR"],
@@ -100,6 +100,7 @@ Map = Graph (vertex,edges)
 print(Map.__dict__)
 print(Map.n)
 print(Map.m)
+print(Map)
 
 
 
