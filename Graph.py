@@ -4,6 +4,7 @@ class Graph:
     def __init__(self, V, E):
         self.E = list([u,v,weight] for u,v,weight in E)
         self._nbrs = {}
+        self.V =V
 
         for v in V:
             self.addvertex(v)
@@ -47,17 +48,9 @@ stations = {
     "I":[["E",8],["H",2],["J",6],["L",2]],
     "J":[["I",6]],
     "K":[["G",1]],
-    "L":[["I",2]]
+    "L":[["",2]]
 }
 
-lines = {
-    "A-L": ["A","C","E","I","L"],
-    "L-A": ["L","I","E","C","A"],
-    "B-K":["B","C","D","G","K"],
-    "K-B": ["K","G","D","C","B"],
-    "F-J":["F","G","H","I","J"],
-    "J-F":["J","I","H","G","F"]
-}
 
 
 
