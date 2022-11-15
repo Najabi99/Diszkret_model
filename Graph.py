@@ -1,44 +1,13 @@
-from optparse import Values
-from tkinter import E
 
-
-class Graph1: 
-    def __init__(self, edges):
-        self.edges = edges
-        self.graph_dict = {}
-        for start, end in self.edges:
-            if start in self.graph_dict:
-                self.graph_dict[start].append(end)
-            else:
-                self.graph_dict[start] = [end]
-
-        print("Graph Dictionary",self.graph_dict)
-
-    def get_paths(self, start, end, path =[]):
-
-        path = path +[start]
-
-        if start == end:
-            return [path]
-        if start not in self.graph_dict:
-            return []
-
-        paths =[]
-
-        for node in self.graph_dict[start]:
-            if node not in path:
-                new_paths = self.get_paths(node, end, path)
-                for p in new_paths:
-                    paths.append(p)
-        return paths
 
 class Graph:
     def __init__(self, V, E):
-        self.E = set(frozenset((u,v)) for u,v in E)
+        self.E = list([u,v,weight] for u,v,weight in E)
         self._nbrs = {}
+
         for v in V:
             self.addvertex(v)
-        for u,v in self.E:
+        for u,v,weight in self.E:
             self.addedge(u,v)
     
     def addedge(self, u, v):
@@ -56,6 +25,7 @@ class Graph:
     
     def nbrs(self, v):
         return iter(self._nbrs[v])
+    
 
     @property
     def m(self):
@@ -66,25 +36,30 @@ class Graph:
         return len(self._nbrs)
 
 stations = {
-    "BUD": ["KOM","SZEK","PECS","KECS","MIS",],
-    "GYOR": ["KOM","SZEK"],
-    "KOM":["BUD","GYOR"],
-    "SZEK":["SIO","BUD","GYOR"],
-    "SIO":["SZEK","PECS"],
-    "PECS":["SIO","BUD"],
-    "KECS":["BUD","SZE","SZO"],
-    "SZE":["KECS"],
-    "SZO":["KECS","DEB"],
-    "DEB":["SZO","MIS"],
-    "MIS":["DEB","BUD"]
+    "A": [["C",3]],
+    "B": [["C",4]],
+    "C":[["A",3],["B",4],["D",5],["E",4]],
+    "D":[["G",3],["C",5]],
+    "E":[["I",8],["C",4]],
+    "F":[["G",5]],
+    "G":[["D",3],["F",5],["H",4],["K",1]],
+    "H":[["I",2],["G",4]],
+    "I":[["E",8],["H",2],["J",6],["L",2]],
+    "J":[["I",6]],
+    "K":[["G",1]],
+    "L":[["I",2]]
 }
+
 lines = {
-    "GYOR-SZE": ["GYOR","KOM","BUD","KECS","SZE"],
-    "PECS-GYOR": ["PECS","SIO","SZEK","GYOR"],
-    "PECS-MIS":["PECS","BUD","MIS"],
-    "MIS-SZE": ["MIS","DEB","SZO","KECS","SZE"],
-    "BUD-DEB":["BUD","KECS","SZO","SZE"]
+    "A-L": ["A","C","E","I","L"],
+    "L-A": ["L","I","E","C","A"],
+    "B-K":["B","C","D","G","K"],
+    "K-B": ["K","G","D","C","B"],
+    "F-J":["F","G","H","I","J"],
+    "J-F":["J","I","H","G","F"]
 }
+
+
 
 vertex = []
 
@@ -93,14 +68,16 @@ for key in stations:
 edges = []
 
 for key, value in stations.items():
-    for i in range(len(value)):
-        edges.append([key,value[i]])
+     for i in range(len(value)):
+        edges.append([key,value[i][0],value[i][1]])
+# for key, value in stations.items():
+#     print("key",key)
+#     print("value",value)
 
 Map = Graph (vertex,edges)
 print(Map.__dict__)
-print(Map.n)
 print(Map.m)
-
-
+print(Map.n)
+print(Map._nbrs)
 
 #print(f"Paths between {start} and {end}: ", route_graph.get_paths(start, end))
