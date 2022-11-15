@@ -4,12 +4,18 @@ class Graph:
     def __init__(self, V, E):
         self.E = list([u,v,weight] for u,v,weight in E)
         self._nbrs = {}
-        self.V =V
+        self.V = V
+        self.aMatrix = [[0 for i in range(len(V)) ] for j in range(len(V))]
+
 
         for v in V:
             self.addvertex(v)
         for u,v,weight in self.E:
             self.addedge(u,v)
+        for u, v, weight in E:
+            self.aMatrix[(ord(u)-65)][(ord(v)-65)] = weight
+            self.aMatrix[(ord(v)-65)][(ord(u)-65)] = weight
+        
     
     def addedge(self, u, v):
         self.addvertex(u)
@@ -26,7 +32,45 @@ class Graph:
     
     def nbrs(self, v):
         return iter(self._nbrs[v])
-    
+
+    def printSolution(self, dist):
+        print("Vertex \t Distance from Source")
+        for node in range(len(self.V)):
+            print(node, "\t\t", dist[node])
+
+	
+    def minDistance(self, dist, sptSet):
+
+        min = 1000
+
+        for v in range(len(self.V)):
+            if dist[v] < min and sptSet[v] == False:
+                min = dist[v]
+                min_index = v
+
+        return min_index
+
+	
+
+    def dijkstra(self, src):
+
+        dist = [1000] * len(self.V)
+        dist[src] = 0
+        sptSet = [False] * len(self.V)
+
+        for cout in range(len(self.V)):
+
+            u = self.minDistance(dist, sptSet)
+
+            sptSet[u] = True
+
+            for v in range(len(self.V)):
+                if (self.aMatrix[u][v] > 0 and
+                sptSet[v] == False and
+                dist[v] > dist[u] + self.aMatrix[u][v]):
+                    dist[v] = dist[u] + self.aMatrix[u][v]
+
+        self.printSolution(dist)
 
     @property
     def m(self):
@@ -48,7 +92,7 @@ stations = {
     "I":[["E",8],["H",2],["J",6],["L",2]],
     "J":[["I",6]],
     "K":[["G",1]],
-    "L":[["",2]]
+    "L":[["I",2]]
 }
 
 
@@ -71,6 +115,8 @@ Map = Graph (vertex,edges)
 print(Map.__dict__)
 print(Map.m)
 print(Map.n)
-print(Map._nbrs)
+print(Map.aMatrix)
+Map.dijkstra(0)
 
-#print(f"Paths between {start} and {end}: ", route_graph.get_paths(start, end))
+
+#print(f"Paths between {start} and {end}: ", route.aMatrix.get_paths(start, end))
