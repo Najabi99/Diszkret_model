@@ -34,6 +34,7 @@ class Graph:
         return iter(self._nbrs[v])
 
     def printSolution(self, dist):
+        print(dist)
         print("Vertex \t Distance from Source")
         for node in range(len(self.V)):
             print(node, "\t\t", dist[node])
@@ -69,8 +70,11 @@ class Graph:
                 sptSet[v] == False and
                 dist[v] > dist[u] + self.aMatrix[u][v]):
                     dist[v] = dist[u] + self.aMatrix[u][v]
-
-        self.printSolution(dist)
+        
+     
+        
+        #self.printSolution(dist)
+        return dist
 
     @property
     def m(self):
@@ -123,16 +127,35 @@ edges = []
 for key, value in stations.items():
      for i in range(len(value)):
         edges.append([key,value[i][0],value[i][1]])
-# for key, value in stations.items():
-#     print("key",key)
-#     print("value",value)
+
+
+cimek = ["A","C","D","G","H","Z","S"]
+
+source = "D"
 
 Map = Graph (vertex,edges)
-print(Map.__dict__)
-print(Map.m)
-print(Map.n)
-print(Map.aMatrix)
-Map.dijkstra(0)
+Map.dijkstra(10)
 
-
+def feladat (source, cimek):
+  traveled = 0
+  #címek átírása betűből számmá
+  cimek = [(ord(i)-65) for i in cimek]
+  #addig futtatjuk amíg van még pont ahova nem mentünk még el
+  while (len(cimek) > 0):
+    #futtatunk egy dijsktrat a "source" pontból
+    distance = Map.dijkstra((ord(source)-65))
+    print("Innen indultal", source)
+    #kivesszuk azokat a pontokat amikbe szállítunk
+    dist = [distance[i] for i in cimek]
+    #megállapítjuk a legközelebbit
+    next = distance.index(min(dist))
+    #hozzáadjuk a távolságot az összes "úthoz"
+    traveled += min(dist)
+    print("Your next destination is",chr(next+65))
+    #kitöröljük a pontot és átállítjuk az újat a kezdőpontnak
+    cimek.remove(next)
+    source = chr(next+65)
+  print("Ossz utazott km",traveled)
+feladat(source,cimek)
+  
 #print(f"Paths between {start} and {end}: ", route.aMatrix.get_paths(start, end))
